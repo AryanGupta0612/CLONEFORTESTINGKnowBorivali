@@ -7,8 +7,8 @@ function RecentlyAdded() {
   
   // Get recently added community resources (last 5)
   const recentResources = allResources
-    .filter((resource: any) => resource.isUserSubmitted)
-    .sort((a: any, b: any) => new Date(b.submittedAt).getTime() - new Date(a.submittedAt).getTime())
+    .filter((resource: any) => resource.is_user_submitted)
+    .sort((a: any, b: any) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
     .slice(0, 5);
 
   if (recentResources.length === 0) {

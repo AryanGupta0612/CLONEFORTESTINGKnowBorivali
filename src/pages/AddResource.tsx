@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Plus, Check, AlertCircle, X } from 'lucide-react';
 import { categories } from '../data/resources';
+import { useResources } from '../hooks/useResources';
 
 interface FormData {
   name: string;
@@ -24,6 +25,7 @@ interface FormErrors {
 
 function AddResource() {
   const navigate = useNavigate();
+  const { addResource } = useResources();
   const [showSuccess, setShowSuccess] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState<FormErrors>({});
@@ -119,46 +121,45 @@ function AddResource() {
     setIsSubmitting(true);
 
     try {
-      // Get existing resources from localStorage
-      const existingResources = JSON.parse(localStorage.getItem('community-resources') || '[]');
-      
-      // Generate new ID
-      const newId = Math.max(0, ...existingResources.map((r: any) => r.id)) + 1;
-      
-      // Create new resource
-      const newResource = {
+      const resourceData = {
         ...formData,
-        id: newId,
-        isUserSubmitted: true,
-        submittedAt: new Date().toISOString(),
-        approved: false // For future moderation system
+        contact: formData.contact || null,
+        email: formData.email || null,
+        website: formData.website || null,
+        description: formData.description || null,
+        hours: formData.hours || null,
+        services: formData.services.length > 0 ? formData.services : null,
+        is_user_submitted: true,
+        approved: true
       };
 
-      // Add to localStorage
-      const updatedResources = [...existingResources, newResource];
-      localStorage.setItem('community-resources', JSON.stringify(updatedResources));
+      const result = await addResource(resourceData);
 
-      // Show success message
-      setShowSuccess(true);
-      
-      // Reset form
-      setFormData({
-        name: '',
-        type: '',
-        category: '',
-        address: '',
-        contact: '',
-        email: '',
-        website: '',
-        description: '',
-        rating: 4.0,
-        status: 'Open',
-        hours: '',
-        services: []
-      });
+      if (result.success) {
+        setShowSuccess(true);
+        
+        // Reset form
+        setFormData({
+          name: '',
+          type: '',
+          category: '',
+          address: '',
+          contact: '',
+          email: '',
+          website: '',
+          description: '',
+          rating: 4.0,
+          status: 'Open',
+          hours: '',
+          services: []
+        });
+      } else {
+        setErrors({ submit: 'Failed to add resource. Please try again.' });
+      }
 
     } catch (error) {
       console.error('Error submitting resource:', error);
+      setErrors({ submit: 'Failed to add resource. Please try again.' });
     } finally {
       setIsSubmitting(false);
     }
@@ -179,6 +180,15 @@ function AddResource() {
       </div>
 
       <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow-sm border border-gray-200 p-8">
+        {errors.submit && (
+          <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-md">
+            <div className="flex items-center">
+              <AlertCircle className="h-5 w-5 text-red-400 mr-2" />
+              <p className="text-red-700">{errors.submit}</p>
+            </div>
+          </div>
+        )}
+
         <div className="grid md:grid-cols-2 gap-6">
           {/* Name */}
           <div className="md:col-span-2">
@@ -469,7 +479,7 @@ function AddResource() {
               </div>
               <h3 className="text-lg font-semibold text-gray-900 mb-2">Resource Added Successfully!</h3>
               <p className="text-gray-600 mb-6">
-                Thank you for contributing to our community. Your resource has been added and will help newcomers discover essential services in Borivali.
+                Thank you for contributing to our community. Your resource has been added and is now permanently available to all users.
               </p>
               <button
                 onClick={closeSuccessModal}
