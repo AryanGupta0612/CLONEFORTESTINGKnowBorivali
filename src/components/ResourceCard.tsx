@@ -1,0 +1,129 @@
+import React from 'react';
+import { MapPin, Clock, Phone, Mail, Globe, Star, Heart } from 'lucide-react';
+
+interface ResourceCardProps {
+  name: string;
+  type: string;
+  address: string;
+  contact?: string;
+  email?: string;
+  website?: string;
+  description?: string;
+  rating?: number;
+  status?: 'Open' | 'Closed' | 'Open 24/7';
+  hours?: string;
+  services?: string[];
+}
+
+function ResourceCard({ 
+  name, 
+  type, 
+  address, 
+  contact, 
+  email, 
+  website, 
+  description, 
+  rating = 4.5, 
+  status = 'Open', 
+  hours = '9:00 AM - 6:00 PM',
+  services = []
+}: ResourceCardProps) {
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case 'Open': return 'bg-green-100 text-green-800';
+      case 'Closed': return 'bg-red-100 text-red-800';
+      case 'Open 24/7': return 'bg-blue-100 text-blue-800';
+      default: return 'bg-gray-100 text-gray-800';
+    }
+  };
+
+  return (
+    <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow">
+      {/* Header */}
+      <div className="flex items-start justify-between mb-4">
+        <div className="flex-1">
+          <div className="flex items-center gap-3 mb-2">
+            <button className="text-gray-400 hover:text-red-500 transition-colors">
+              <Heart className="h-5 w-5" />
+            </button>
+            <h3 className="font-semibold text-xl text-gray-900">{name}</h3>
+          </div>
+          
+          <div className="flex items-center gap-4 mb-3">
+            <div className="flex items-center gap-1">
+              <Star className="h-4 w-4 text-yellow-400 fill-current" />
+              <span className="font-medium text-gray-900">{rating}</span>
+            </div>
+            <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(status)}`}>
+              {status}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      {/* Description */}
+      {description && (
+        <p className="text-gray-600 mb-4 leading-relaxed">{description}</p>
+      )}
+
+      {/* Services */}
+      {services.length > 0 && (
+        <div className="mb-4">
+          <div className="flex flex-wrap gap-2">
+            {services.slice(0, 3).map((service, index) => (
+              <span 
+                key={index}
+                className="inline-flex items-center px-3 py-1 rounded-full text-sm bg-gray-100 text-gray-700"
+              >
+                {service}
+              </span>
+            ))}
+            {services.length > 3 && (
+              <span className="inline-flex items-center px-3 py-1 rounded-full text-sm bg-gray-100 text-gray-700">
+                +{services.length - 3} more
+              </span>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* Contact Information */}
+      <div className="space-y-3 pt-4 border-t border-gray-100">
+        <div className="flex items-start space-x-3 text-sm text-gray-600">
+          <MapPin className="h-4 w-4 mt-0.5 flex-shrink-0" />
+          <span>{address}</span>
+        </div>
+        
+        <div className="flex items-center space-x-3 text-sm text-gray-600">
+          <Clock className="h-4 w-4 flex-shrink-0" />
+          <span>{hours}</span>
+        </div>
+
+        <div className="flex items-center gap-4 pt-2">
+          {contact && (
+            <button className="flex items-center space-x-2 text-blue-600 hover:text-blue-700 transition-colors">
+              <Phone className="h-4 w-4" />
+              <span className="text-sm font-medium">Call</span>
+            </button>
+          )}
+          
+          {email && (
+            <button className="flex items-center space-x-2 text-blue-600 hover:text-blue-700 transition-colors">
+              <Mail className="h-4 w-4" />
+              <span className="text-sm font-medium">Email</span>
+            </button>
+          )}
+          
+          {website && (
+            <button className="flex items-center space-x-2 text-blue-600 hover:text-blue-700 transition-colors">
+              <Globe className="h-4 w-4" />
+              <span className="text-sm font-medium">Website</span>
+            </button>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default ResourceCard;
