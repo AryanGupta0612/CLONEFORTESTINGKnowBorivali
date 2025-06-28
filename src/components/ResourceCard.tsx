@@ -99,26 +99,41 @@ function ResourceCard({
           <span>{hours}</span>
         </div>
 
+        {/* Contact Number */}
+        {contact && (
+          <div className="flex items-center space-x-3 text-sm text-gray-600">
+            <Phone className="h-4 w-4 flex-shrink-0" />
+            <a 
+              href={`tel:${contact}`}
+              className="text-blue-600 hover:text-blue-700 transition-colors font-medium"
+            >
+              {contact}
+            </a>
+          </div>
+        )}
+
+        {/* Action Buttons */}
         <div className="flex items-center gap-4 pt-2">
-          {contact && (
-            <button className="flex items-center space-x-2 text-blue-600 hover:text-blue-700 transition-colors">
-              <Phone className="h-4 w-4" />
-              <span className="text-sm font-medium">Call</span>
-            </button>
-          )}
-          
           {email && (
-            <button className="flex items-center space-x-2 text-blue-600 hover:text-blue-700 transition-colors">
+            <a 
+              href={`mailto:${email}`}
+              className="flex items-center space-x-2 text-blue-600 hover:text-blue-700 transition-colors"
+            >
               <Mail className="h-4 w-4" />
               <span className="text-sm font-medium">Email</span>
-            </button>
+            </a>
           )}
           
           {website && (
-            <button className="flex items-center space-x-2 text-blue-600 hover:text-blue-700 transition-colors">
+            <a 
+              href={website}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center space-x-2 text-blue-600 hover:text-blue-700 transition-colors"
+            >
               <Globe className="h-4 w-4" />
               <span className="text-sm font-medium">Website</span>
-            </button>
+            </a>
           )}
         </div>
       </div>
