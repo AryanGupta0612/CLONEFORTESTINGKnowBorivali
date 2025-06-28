@@ -24,9 +24,7 @@ export const resources: Resource[] = [
     type: "Multi-specialty Hospital (Super-speciality)",
     category: "Hospitals & Clinics",
     address: "Beside Punjab & Sind Bank, Lokmanya Tilak Road, Babhai Naka, Borivali West, Mumbai 400092",
-    contact: "+91 22 2898 5678",
     description: "Offers a wide range of specialty services, including emergency care and routine diagnostics.",
-    rating: 4.5,
     status: "Open",
     hours: "24/7 emergency services (general OPD hours vary)",
     services: ["Multi-speciality consultations", "Emergency care", "Diagnostics", "Inpatient care"]
