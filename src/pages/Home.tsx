@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { MapPin, Users, Building, Stethoscope, ShoppingBag, TreePine, Bus } from 'lucide-react';
+import { MapPin, Users, Building, Stethoscope, ShoppingBag, TreePine, Bus, Plus } from 'lucide-react';
+import RecentlyAdded from '../components/RecentlyAdded';
 
 function Home() {
   return (
@@ -56,7 +57,7 @@ function Home() {
       </div>
 
       {/* Call to Action */}
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8 text-center">
+      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8 text-center mb-8">
         <h2 className="text-2xl font-semibold text-gray-900 mb-4">
           Ready to Explore Borivali?
         </h2>
@@ -64,16 +65,30 @@ function Home() {
           Browse our comprehensive directory of local resources, carefully organized to help you 
           find exactly what you're looking for in your new neighborhood.
         </p>
-        <Link 
-          to="/resources" 
-          className="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 transition-colors"
-        >
-          Browse Resources
-        </Link>
+        <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <Link 
+            to="/resources" 
+            className="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 transition-colors"
+          >
+            Browse Resources
+          </Link>
+          <Link 
+            to="/add-resource" 
+            className="inline-flex items-center justify-center gap-2 px-6 py-3 border border-blue-600 text-base font-medium rounded-md text-blue-600 bg-white hover:bg-blue-50 transition-colors"
+          >
+            <Plus className="h-4 w-4" />
+            Add Resource
+          </Link>
+        </div>
+      </div>
+
+      {/* Recently Added Section */}
+      <div className="mb-8">
+        <RecentlyAdded />
       </div>
 
       {/* About Section */}
-      <div className="mt-12 grid md:grid-cols-2 gap-8">
+      <div className="grid md:grid-cols-2 gap-8">
         <div className="bg-gray-100 rounded-lg p-6">
           <div className="flex items-center mb-4">
             <Users className="h-6 w-6 text-blue-600 mr-2" />
@@ -88,12 +103,12 @@ function Home() {
         <div className="bg-gray-100 rounded-lg p-6">
           <div className="flex items-center mb-4">
             <Building className="h-6 w-6 text-green-600 mr-2" />
-            <h3 className="text-lg font-semibold text-gray-900">Local Focus</h3>
+            <h3 className="text-lg font-semibold text-gray-900">Community Driven</h3>
           </div>
           <p className="text-gray-600">
-            Every listing is specifically chosen for its relevance to Borivali residents. 
-            From the nearest medical facilities to the best local markets, we focus on 
-            what truly matters for daily life.
+            Our platform grows with community contributions. Local residents and business owners 
+            can add new resources, ensuring our directory stays current and comprehensive 
+            for everyone's benefit.
           </p>
         </div>
       </div>

@@ -39,6 +39,16 @@ function Navigation() {
             >
               Resources
             </Link>
+            <Link 
+              to="/add-resource" 
+              className={`text-sm font-medium transition-colors ${
+                isActive('/add-resource') 
+                  ? 'text-blue-600 border-b-2 border-blue-600 pb-4' 
+                  : 'text-gray-700 hover:text-blue-600'
+              }`}
+            >
+              Add Resource
+            </Link>
           </div>
         </div>
       </div>

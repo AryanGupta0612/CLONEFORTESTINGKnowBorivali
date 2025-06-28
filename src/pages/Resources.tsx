@@ -1,13 +1,16 @@
 import React, { useState } from 'react';
-import { resources, categories } from '../data/resources';
+import { categories } from '../data/resources';
+import { useResources } from '../hooks/useResources';
 import ResourceCard from '../components/ResourceCard';
-import { Search, Filter } from 'lucide-react';
+import { Search, Filter, Plus } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 function Resources() {
+  const { allResources } = useResources();
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [searchTerm, setSearchTerm] = useState('');
 
-  const filteredResources = resources.filter(resource => {
+  const filteredResources = allResources.filter(resource => {
     const matchesCategory = selectedCategory === 'All' || resource.category === selectedCategory;
     const matchesSearch = resource.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          resource.address.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -18,11 +21,20 @@ function Resources() {
 
   return (
     <div className="max-w-6xl mx-auto">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-4">Local Resources</h1>
-        <p className="text-lg text-gray-600">
-          Discover essential places and services in Borivali. Use the filters below to find exactly what you're looking for.
-        </p>
+      <div className="mb-8 flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold text-gray-900 mb-4">Local Resources</h1>
+          <p className="text-lg text-gray-600">
+            Discover essential places and services in Borivali. Use the filters below to find exactly what you're looking for.
+          </p>
+        </div>
+        <Link
+          to="/add-resource"
+          className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+        >
+          <Plus className="h-4 w-4" />
+          Add Resource
+        </Link>
       </div>
 
       {/* Search and Filter Controls */}
@@ -64,7 +76,7 @@ function Resources() {
       {/* Results Count */}
       <div className="mb-6">
         <p className="text-sm text-gray-600">
-          Showing {filteredResources.length} of {resources.length} resources
+          Showing {filteredResources.length} of {allResources.length} resources
           {selectedCategory !== 'All' && ` in ${selectedCategory}`}
           {searchTerm && ` matching "${searchTerm}"`}
         </p>
@@ -107,7 +119,7 @@ function Resources() {
         <h2 className="text-xl font-semibold text-gray-900 mb-4">Resource Categories</h2>
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
           {categories.map(category => {
-            const count = resources.filter(r => r.category === category).length;
+            const count = allResources.filter(r => r.category === category).length;
             return (
               <button
                 key={category}
