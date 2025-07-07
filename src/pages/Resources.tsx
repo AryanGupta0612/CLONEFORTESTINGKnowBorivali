@@ -2,21 +2,30 @@ import React, { useState } from 'react';
 import { categories } from '../data/resources';
 import { useResources } from '../hooks/useResources';
 import ResourceCard from '../components/ResourceCard';
+import PendingVerification from '../components/PendingVerification';
 import { Search, Filter, Plus, Loader2, AlertCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 function Resources() {
-  const { allResources, loading, error } = useResources();
+  const { allResources, loading, error, refreshResources } = useResources();
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [searchTerm, setSearchTerm] = useState('');
 
   const filteredResources = allResources.filter(resource => {
     const matchesCategory = selectedCategory === 'All' || resource.category === selectedCategory;
-    const matchesSearch = resource.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         resource.address.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         resource.type.toLowerCase().includes(searchTerm.toLowerCase());
     
-    return matchesCategory && matchesSearch;
+    // Smart area filtering - search in name, address, type, and sub-areas
+    const searchLower = searchTerm.toLowerCase();
+    const matchesSearch = searchTerm === '' || 
+                         resource.name.toLowerCase().includes(searchLower) ||
+                         resource.address.toLowerCase().includes(searchLower) ||
+                         resource.type.toLowerCase().includes(searchLower) ||
+                         // Check for sub-areas like Shimpoli, Eksar, etc.
+                         resource.address.toLowerCase().split(',').some(part => 
+                           part.trim().toLowerCase().includes(searchLower)
+                         );
+    
+    return matchesCategory && matchesSearch && resource.verification_status === 'live';
   });
 
   if (loading) {
@@ -69,6 +78,9 @@ function Resources() {
         </Link>
       </div>
 
+      {/* Pending Verification Section */}
+      <PendingVerification />
+
       {/* Search and Filter Controls */}
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-8">
         <div className="flex flex-col md:flex-row gap-4">
@@ -78,7 +90,7 @@ function Resources() {
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
               <input
                 type="text"
-                placeholder="Search resources..."
+                placeholder="Search resources or areas (e.g., Shimpoli, Eksar)..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
@@ -108,7 +120,7 @@ function Resources() {
       {/* Results Count */}
       <div className="mb-6">
         <p className="text-sm text-gray-600">
-          Showing {filteredResources.length} of {allResources.length} resources
+          Showing {filteredResources.length} of {allResources.filter(r => r.verification_status === 'live').length} resources
           {selectedCategory !== 'All' && ` in ${selectedCategory}`}
           {searchTerm && ` matching "${searchTerm}"`}
         </p>
@@ -120,6 +132,7 @@ function Resources() {
           {filteredResources.map(resource => (
             <ResourceCard
               key={resource.id}
+              id={resource.id}
               name={resource.name}
               type={resource.type}
               address={resource.address}
@@ -131,6 +144,10 @@ function Resources() {
               status={resource.status}
               hours={resource.hours}
               services={resource.services}
+              verification_status={resource.verification_status}
+              helpful_votes={resource.helpful_votes}
+              unhelpful_votes={resource.unhelpful_votes}
+              onRefresh={refreshResources}
             />
           ))}
         </div>
@@ -151,7 +168,7 @@ function Resources() {
         <h2 className="text-xl font-semibold text-gray-900 mb-4">Resource Categories</h2>
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
           {categories.map(category => {
-            const count = allResources.filter(r => r.category === category).length;
+            const count = allResources.filter(r => r.category === category && r.verification_status === 'live').length;
             return (
               <button
                 key={category}

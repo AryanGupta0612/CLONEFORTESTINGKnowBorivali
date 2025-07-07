@@ -130,7 +130,8 @@ function AddResource() {
         hours: formData.hours || null,
         services: formData.services.length > 0 ? formData.services : null,
         is_user_submitted: true,
-        approved: true
+        approved: false,
+        verification_status: 'pending' as const
       };
 
       const result = await addResource(resourceData);
@@ -175,7 +176,7 @@ function AddResource() {
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-gray-900 mb-4">Add New Resource</h1>
         <p className="text-lg text-gray-600">
-          Help grow our community by adding a new resource to Know Borivali. Your contribution helps newcomers discover essential places and services.
+          Help grow our community by adding a new resource to Know Borivali. Your contribution will be reviewed by the community before going live.
         </p>
       </div>
 
@@ -477,9 +478,9 @@ function AddResource() {
               <div className="bg-green-100 rounded-full p-3 w-16 h-16 mx-auto mb-4 flex items-center justify-center">
                 <Check className="h-8 w-8 text-green-600" />
               </div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">Resource Added Successfully!</h3>
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">Resource Submitted Successfully!</h3>
               <p className="text-gray-600 mb-6">
-                Thank you for contributing to our community. Your resource has been added and is now permanently available to all users.
+                Thank you for contributing to our community. Your resource is now pending verification and will be live once approved by the community.
               </p>
               <button
                 onClick={closeSuccessModal}

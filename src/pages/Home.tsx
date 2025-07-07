@@ -2,6 +2,8 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { MapPin, Users, Building, Stethoscope, ShoppingBag, TreePine, Bus, Plus } from 'lucide-react';
 import RecentlyAdded from '../components/RecentlyAdded';
+import FeedbackSection from '../components/FeedbackSection';
+import QRCode from '../components/QRCode';
 
 function Home() {
   return (
@@ -88,7 +90,7 @@ function Home() {
       </div>
 
       {/* About Section */}
-      <div className="grid md:grid-cols-2 gap-8">
+      <div className="grid md:grid-cols-2 gap-8 mb-8">
         <div className="bg-gray-100 rounded-lg p-6">
           <div className="flex items-center mb-4">
             <Users className="h-6 w-6 text-blue-600 mr-2" />
@@ -110,6 +112,28 @@ function Home() {
             can add new resources, ensuring our directory stays current and comprehensive 
             for everyone's benefit.
           </p>
+        </div>
+      </div>
+
+      {/* Feedback Section */}
+      <div className="mb-8">
+        <FeedbackSection />
+      </div>
+
+      {/* QR Code Section */}
+      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 text-center">
+        <h3 className="text-lg font-semibold text-gray-900 mb-4">
+          Share Know Borivali
+        </h3>
+        <p className="text-gray-600 mb-4">
+          Scan this QR code to quickly access our website on your mobile device
+        </p>
+        <div className="flex justify-center">
+          <QRCode 
+            url="https://shimmering-pavlova-1d0bb6.netlify.app/" 
+            size={120}
+            className="border border-gray-200 rounded-lg p-2"
+          />
         </div>
       </div>
     </div>
