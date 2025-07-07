@@ -22,12 +22,13 @@ export function useVisitorTracking() {
       const visitorIP = await getClientIP();
       const userAgent = navigator.userAgent;
 
-      // Check if visitor exists
-      const { data: existingVisitor } = await supabase
+      // Check if visitor exists - removed .single() to handle no results gracefully
+      const { data: visitors } = await supabase
         .from('visitor_tracking')
         .select('*')
-        .eq('visitor_ip', visitorIP)
-        .single();
+        .eq('visitor_ip', visitorIP);
+
+      const existingVisitor = visitors && visitors.length > 0 ? visitors[0] : null;
 
       if (existingVisitor) {
         // Update existing visitor
